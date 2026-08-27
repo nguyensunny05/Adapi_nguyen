@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: adapi
+    environment:
+      POSTGRES_USER: adapi
+      POSTGRES_PASSWORD: adapi
+      POSTGRES_DB: adapi_laremise
+    ports:
+      - "5450:5432"
+    volumes:
+      - adapi:/var/lib/postgresql/data
+
+volumes:
+  adapi:
