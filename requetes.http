@@ -1,16 +1,28 @@
-### Créer un film
-POST http://localhost:3000/films
-Content-Type: application/json
+GET http://localhost:3000/api/objets
 
+###
+GET http://localhost:3000/api/categories
+
+### Consulter un dépôt
+GET http://localhost:3000/api/depots/1
+
+###
+POST http://localhost:3000/api/personnes
 {
-  "titre": "Inception",
-  "annee": 2010,
-  "duree_en_minutes": 148,
-  "id_genre": 1
+  "nom": "Martin",
+  "prenom": "Claire",
+  "telephone": "0612345678",
+  "adherente": true
 }
 
-### Récupérer les films d'un genre
-GET http://localhost:3000/genres/3/films
+###
+POST http://localhost:3000/api/depots
+{
+  "personne_id": 1,
+  "date_depot": "2026-09-03",
+  "type": "boutique"
+}
+
 
 ### Créer un objet dans un dépôt
 POST http://localhost:3000/api/depots/1/objets
@@ -28,13 +40,12 @@ Content-Type: application/json
   "prix_paye": 0.00
 }
 
-### Consulter un dépôt
-GET http://localhost:3000/api/depots/1
-
-### Créer une catégorie
-POST http://localhost:3000/api/categories
-Content-Type: application/json
-
+###
+PATCH http://localhost:3000/api/objets/1/statut
 {
-  "nom": "Cycles"
+  "statut": "en_rayon",
+  "prix": 1000.00
 }
+
+###
+GET http://localhost:3000/api/stats
