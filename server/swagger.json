@@ -1,16 +1,259 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "API La Remise",
+    "title": "ADAPI Documentation",
     "version": "1.0.0",
-    "description": "API de gestion de la ressourcerie La Remise"
+    "description": "Documentation interactive de l'API de gestion des dépôts, objets et adhérents"
   },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Serveur local de développement"
+    }
+  ],
   "paths": {
-    "/objets": {
+    "/api/objets": {
       "get": {
-        "summary": "Liste tous les objets",
+        "tags": ["Objets"],
+        "summary": "Récupérer la liste des objets",
         "responses": {
-          "200": { "description": "La liste des objets" }
+          "200": {
+            "description": "Liste récupérée avec succès"
+          }
+        }
+      }
+    },
+    "/api/objets/{id}/statut": {
+      "patch": {
+        "tags": ["Objets"],
+        "summary": "Mettre à jour le statut et le prix d'un objet",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "statut": {
+                    "type": "string",
+                    "example": "en_rayon"
+                  },
+                  "prix": {
+                    "type": "number",
+                    "example": 1000.00
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Statut de l'objet mis à jour avec succès"
+          }
+        }
+      }
+    },
+    "/api/categories": {
+      "get": {
+        "tags": ["Catégories"],
+        "summary": "Récupérer toutes les catégories",
+        "responses": {
+          "200": {
+            "description": "Liste des catégories récupérée avec succès"
+          }
+        }
+      }
+    },
+    "/api/depots": {
+      "post": {
+        "tags": ["Dépôts"],
+        "summary": "Créer un nouveau dépôt",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "personne_id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "date_depot": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-09-03"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "boutique"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Dépôt créé avec succès"
+          }
+        }
+      }
+    },
+    "/api/depots/{id}": {
+      "get": {
+        "tags": ["Dépôts"],
+        "summary": "Consulter un dépôt par son ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Détails du dépôt récupérés avec succès"
+          }
+        }
+      }
+    },
+    "/api/depots/{id}/objets": {
+      "post": {
+        "tags": ["Dépôts"],
+        "summary": "Créer un objet rattaché à un dépôt",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Identifiant du dépôt",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "libelle": {
+                    "type": "string",
+                    "example": "Vélo de course"
+                  },
+                  "poids_kg": {
+                    "type": "number",
+                    "example": 10.5
+                  },
+                  "etat_arrivee": {
+                    "type": "string",
+                    "example": "bon_etat"
+                  },
+                  "statut": {
+                    "type": "string",
+                    "example": "en_stock"
+                  },
+                  "prix": {
+                    "type": "number",
+                    "example": 85.00
+                  },
+                  "date_mise_rayon": {
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-08-31"
+                  },
+                  "categorie_id": {
+                    "type": "integer",
+                    "example": 2
+                  },
+                  "vente_id": {
+                    "type": "integer",
+                    "nullable": true,
+                    "example": null
+                  },
+                  "prix_paye": {
+                    "type": "number",
+                    "example": 0.00
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Objet ajouté au dépôt avec succès"
+          }
+        }
+      }
+    },
+    "/api/personnes": {
+      "post": {
+        "tags": ["Personnes"],
+        "summary": "Ajouter une personne (adhérente ou déposante)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nom": {
+                    "type": "string",
+                    "example": "Martin"
+                  },
+                  "prenom": {
+                    "type": "string",
+                    "example": "Claire"
+                  },
+                  "telephone": {
+                    "type": "string",
+                    "example": "0612345678"
+                  },
+                  "adherente": {
+                    "type": "boolean",
+                    "example": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Personne enregistrée avec succès"
+          }
+        }
+      }
+    },
+    "/api/stats": {
+      "get": {
+        "tags": ["Statistiques"],
+        "summary": "Consulter les statistiques globales",
+        "responses": {
+          "200": {
+            "description": "Statistiques récupérées avec succès"
+          }
         }
       }
     }
