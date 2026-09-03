@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
     JOIN categorie ON categorie.id = objet.categorie_id  -- relie chaque objet à sa catégorie
     WHERE objet.statut = COALESCE($1, objet.statut)               -- si $1 est null, la condition devient toujours vraie (pas de filtre)
     AND objet.categorie_id = COALESCE($2, objet.categorie_id)     -- même principe pour le deuxième filtre
-    ORDER BY objet.id,`
+    ORDER BY objet.id`,
     [statut, categorie_id] // $1 = statut, $2 = categorie_id — requête paramétrée, jamais de concaténation
   );
   res.json(rows); 
@@ -36,6 +36,28 @@ router.get("/:id", async (req, res)=>{
   res.json(rows[0]); 
 }
 )
+
+router.patch("/:id/statut", async (req, res) => {
+  const { statut, prix } = req.body;
+  const objetId = req.params.id
+  const STATUTS = ["arrive", "en_reparation", "en_rayon", "vendu", "recycle"];
+  if (!STATUTS.includes(statut)) {
+    return res.status(400).json({ erreur: "Statut invalide" });
+  }
+
+  const { rows } = await pool.query(
+    `UPDATE objet
+     SET statut = $2::statut_objet,
+         prix = COALESCE($3, prix),
+         date_mise_rayon = CASE WHEN $2 = 'en_rayon' THEN CURRENT_DATE ELSE date_mise_rayon END
+     WHERE id = $1 RETURNING *`,
+    [objetId, statut, prix ?? null]
+  );
+
+  if (rows.length === 0) return res.status(404).json({ erreur: "Introuvable" });
+  res.json(rows[0]);
+});
+
 // router.post("/",async(req,res) => {
 //     console.log("hello");
 //   const {libelle, poids_kg, etat_arrivee, statut, prix, date_mise_rayon, categorie_id, depot_id, vente_id, prix_paye} = req.body

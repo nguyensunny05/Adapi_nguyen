@@ -1,0 +1,40 @@
+### Créer un film
+POST http://localhost:3000/films
+Content-Type: application/json
+
+{
+  "titre": "Inception",
+  "annee": 2010,
+  "duree_en_minutes": 148,
+  "id_genre": 1
+}
+
+### Récupérer les films d'un genre
+GET http://localhost:3000/genres/3/films
+
+### Créer un objet dans un dépôt
+POST http://localhost:3000/api/depots/1/objets
+Content-Type: application/json
+
+{
+  "libelle": "Vélo de course",
+  "poids_kg": 10.5,
+  "etat_arrivee": "bon_etat",
+  "statut": "en_stock",
+  "prix": 85.00,
+  "date_mise_rayon": "2026-08-31",
+  "categorie_id": 2,
+  "vente_id": null,
+  "prix_paye": 0.00
+}
+
+### Consulter un dépôt
+GET http://localhost:3000/api/depots/1
+
+### Créer une catégorie
+POST http://localhost:3000/api/categories
+Content-Type: application/json
+
+{
+  "nom": "Cycles"
+}

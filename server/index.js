@@ -8,12 +8,14 @@ import personnesRouter from "./routes/personnes.js";
 import depotRouter from "./routes/depots.js";
 
 const app = express();
+
 app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/categories" , categoriesRouter);
 app.use("/api/objets" , objetsRouter);
 app.use("/api/personnes" , personnesRouter);
 app.use("/api/depots", depotRouter)
+
 
 
 // app.get("/:id", (req, res) => {
